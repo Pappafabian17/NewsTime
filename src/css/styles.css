@@ -1,0 +1,74 @@
+:root {
+  --main-color: #5682b1;
+  --secondary-color: #ffe8db;
+  --ligth-blue: #739ec9;
+  --text: #000000;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+/*HEADER*/
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: var(--ligth-blue);
+  padding: 0 1rem;
+  border-bottom: solid 0.4rem var(--main-color);
+
+  & ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+
+    & li a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      &:hover {
+        text-decoration-line: underline;
+        text-decoration-color: var(--secondary-color);
+        text-decoration-thickness: 0.1rem;
+      }
+    }
+  }
+  & .logo {
+    width: 100px;
+  }
+}
+.hide {
+  display: none;
+}
+/*FOOTER*/
+footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: solid 0.4rem var(--main-color);
+  background-color: var(--ligth-blue);
+  & .main-footer-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2rem;
+  }
+  & .rights {
+    padding: 1rem 0;
+  }
+}
+footer hr {
+  height: 2px;
+  border: none; /* importante para evitar estilos por defecto */
+  background-color: var(--main-color);
+  width: 70%;
+}

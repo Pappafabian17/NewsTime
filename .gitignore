@@ -1,0 +1,7 @@
+.env
+node_modules
+dist
+.cache
+.vscode
+web_modules
+.DS_Store
