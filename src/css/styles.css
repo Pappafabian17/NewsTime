@@ -16,36 +16,39 @@ body {
 header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   background-color: var(--ligth-blue);
   padding: 0 1rem;
   border-bottom: solid 0.4rem var(--main-color);
 
   & ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-
-    & li a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      &:hover {
-        text-decoration-line: underline;
-        text-decoration-color: var(--secondary-color);
-        text-decoration-thickness: 0.1rem;
-      }
-    }
+    display: none;
   }
   & .logo {
     width: 100px;
   }
+  & .ham-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  & .search-bar {
+    display: flex;
+    & input {
+      border: solid #c9c7c7 1px;
+      border-radius: 2rem 0 0 2rem;
+      padding: 1rem;
+    }
+    & button {
+      border: solid #c9c7c7 1px;
+      border-radius: 0 2rem 2rem 0;
+      background-color: #ffffff;
+    }
+  }
 }
-.hide {
-  display: none;
-}
+
 /*FOOTER*/
 footer {
   width: 100%;
@@ -57,13 +60,52 @@ footer {
   background-color: var(--ligth-blue);
   & .main-footer-section {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    padding: 2rem;
+    padding: 0.5rem;
+
+    & .start {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      & a {
+        text-decoration: none;
+      }
+    }
+
+    & .center {
+      & section {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        & a {
+          text-decoration: none;
+          color: var(--text);
+        }
+      }
+    }
+    & .end {
+      & section {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        & a {
+          text-decoration: none;
+          color: var(--text);
+        }
+      }
+    }
+  }
+  & a {
+    font-size: 0.7rem;
+  }
+  & h4 {
+    font-size: 0.4rem;
+    font-weight: 400;
   }
   & .rights {
-    padding: 1rem 0;
+    padding: 0.5rem;
   }
 }
 footer hr {
@@ -71,4 +113,67 @@ footer hr {
   border: none; /* importante para evitar estilos por defecto */
   background-color: var(--main-color);
   width: 70%;
+}
+
+@media (min-width: 769px) {
+  header {
+    & ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+
+      & li a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        &:hover {
+          text-decoration-line: underline;
+          text-decoration-color: var(--secondary-color);
+          text-decoration-thickness: 0.1rem;
+        }
+      }
+    }
+  }
+
+  .hide {
+    display: none;
+  }
+  /*FOOTER*/
+  footer {
+    & .main-footer-section {
+      flex-direction: row;
+      padding: 2rem;
+    }
+    & .rights {
+      padding: 1rem 0;
+    }
+    & h4 {
+      font-size: 1rem;
+    }
+    & .center {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 5rem;
+      & section {
+        align-items: center;
+        display: flex;
+        & a {
+          color: var(--text);
+          text-decoration: none;
+        }
+      }
+    }
+    & .end {
+      & section {
+        & a {
+          color: var(--text);
+          text-decoration: none;
+          &:hover {
+            color: var(--secondary-color);
+          }
+        }
+      }
+    }
+  }
 }
