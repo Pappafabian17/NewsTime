@@ -115,6 +115,59 @@ footer hr {
   width: 70%;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.news-card {
+  display: flex;
+  flex-direction: column;
+  border: solid #c9c7c7 0.1rem;
+  border-radius: 2rem 2rem 0 0;
+  width: 90%;
+  margin: 2rem;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+  will-change: transform, box-shadow;
+
+  &:hover,
+  &:focus-within {
+    transform: translateY(-2px);
+    border-color: transparent;
+    box-shadow:
+      0 8px 20px rgba(0, 0, 0, 0.12),
+      0 16px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  & .news-a {
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--text);
+
+    & .news-image {
+      border-radius: 2rem 2rem 0 0;
+    }
+
+    & .news-text {
+      padding: 2rem;
+      & .news-description {
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
 @media (min-width: 769px) {
   header {
     & ul {
@@ -175,5 +228,9 @@ footer hr {
         }
       }
     }
+  }
+  main {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
