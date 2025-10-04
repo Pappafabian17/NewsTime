@@ -6,7 +6,12 @@ export default class NewsData {
   constructor() {}
   async getNews(query) {
     const response = await fetchingFunction(baseUrl, query);
-    console.log("response", response);
+    // console.log("response de getNews", response);
+    return response;
+  }
+  async getNewsById(id){
+    const response = await fetchingFunction(baseUrl, id);
+    console.log("response by id", response);
     return response;
   }
 }

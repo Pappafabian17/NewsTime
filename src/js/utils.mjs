@@ -46,9 +46,20 @@ export async function loadHeaderFooter() {
   renderWithTemplate(footerTemplate, footerElement);
 }
 
-export async function fetchingFunction(url, q) {
-  const response = await fetch(`${url}?apikey=${news_api_key}&q=${q}`);
-  const data = await convertToJson(response);
-  console.log("data", data);
-  return data;
+export async function fetchingFunction(url, q, id = null) {
+  let response;
+  try{
+    if(!id){
+      response = await fetch(`${url}?apikey=${news_api_key}&q=${q}`);
+  }else{
+      response = await fetch(`${url}?apikey=${news_api_key}&id=${id}`);
+  }
+
+    const data = await convertToJson(response);
+    // console.log("data dentro de utils", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
 }
