@@ -56,10 +56,13 @@ export async function fetchingFunction(url, q, id = null) {
   }
 
     const data = await convertToJson(response);
-    // console.log("data dentro de utils", data);
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
   }
+}
+
+export function getLocation(){
+
 }
