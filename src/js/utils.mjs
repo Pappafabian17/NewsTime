@@ -36,8 +36,11 @@ export async function loadTemplate(path) {
 }
 
 export async function loadHeaderFooter() {
-  const headerTemplate = await loadTemplate("src/public/partials/header.html");
-  const footerTemplate = await loadTemplate("src/public/partials/footer.html");
+  const isDev = import.meta.env.DEV;
+  const basePath = isDev ? "src/public/" : "";
+  
+  const headerTemplate = await loadTemplate(`${basePath}partials/header.html`);
+  const footerTemplate = await loadTemplate(`${basePath}partials/footer.html`);
 
   const headerElement = document.querySelector("#header");
   const footerElement = document.querySelector("#footer");
