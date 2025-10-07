@@ -1,6 +1,7 @@
 import NewsData from "./NewsData.mjs";
 import NewsList from "./newsList.mjs";
 import { loadHeaderFooter } from "./utils.mjs";
+import WeatherData from "./weather.mjs";
 
 const countryMap = {
     "Argentina": "ar",
@@ -13,19 +14,22 @@ const countryMap = {
 }
 
 let currentNewsList = null;
-
+let weatherInformation = null;
 
 
 async function initPage() {
   await loadHeaderFooter();
   setupNavigation();
-
+  setweather();
   loadNewsForCountry("Argentina");
 }
 
 function setupNavigation(){
   setTimeout(()=>{
     const navLinks = document.querySelectorAll('header ul li a');
+    const hamburgerButton = document.querySelector('.ham-button');
+    const hamburguerIcon = document.querySelector('.ham-icon');
+    const navMenu = document.querySelector('header ul');
 
     navLinks.forEach(link =>{
       link.addEventListener('click', (e) =>{
@@ -33,9 +37,29 @@ function setupNavigation(){
         const countryName = e.target.textContent.trim();
         loadNewsForCountry(countryName);
         updateActiveNavItem(e.target);
+        
+        if (navMenu.classList.contains('show')) {
+          navMenu.classList.remove('show');
+          hamburgerButton.classList.remove('active');
+        }
       })
     })
-  },100)
+
+    if (hamburgerButton) {
+      hamburgerButton.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+        hamburgerButton.classList.toggle('active');
+
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!hamburgerButton.contains(e.target) && !navMenu.contains(e.target)) {
+        navMenu.classList.remove('show');
+        hamburgerButton.classList.remove('active');
+      }
+    });
+  },0)
 }
 
 async function loadNewsForCountry(countryName){
@@ -59,6 +83,11 @@ function updateActiveNavItem(activeLink) {
   navLinks.forEach(link => link.classList.remove('active'));
   activeLink.classList.add('active');
 }
+async function setweather(){
+  const weatherData = new WeatherData();
+  weatherInformation =  await weatherData.getWeather();
+  console.log("weatherInformation", weatherInformation);
 
+}
 
 initPage();

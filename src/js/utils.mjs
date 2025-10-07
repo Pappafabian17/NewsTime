@@ -1,5 +1,5 @@
 const news_api_key = import.meta.env.VITE_NEWS_API_KEY;
-
+const weather_api_key = import.meta.env.VITE_WEATHER_API;
 function convertToJson(res) {
   if (res.ok) {
     return res.json();
@@ -49,14 +49,18 @@ export async function loadHeaderFooter() {
   renderWithTemplate(footerTemplate, footerElement);
 }
 
-export async function fetchingFunction(url, q, id = null) {
+export async function fetchingFunction(aplication = null, url, q, id = null) {
   let response;
   try{
-    if(!id){
-      response = await fetch(`${url}?apikey=${news_api_key}&q=${q}`);
-  }else{
-      response = await fetch(`${url}?apikey=${news_api_key}&id=${id}`);
-  }
+    if(aplication ==="news"){
+      if(!id){
+        response = await fetch(`${url}?apikey=${news_api_key}&q=${q}`);
+      }else{
+        response = await fetch(`${url}?apikey=${news_api_key}&id=${id}`);
+      }
+    }else{
+      response = await fetch(`${url}?key=${weather_api_key}&q=${q}&aqi=no`);
+    }
 
     const data = await convertToJson(response);
     return data;
@@ -66,6 +70,16 @@ export async function fetchingFunction(url, q, id = null) {
   }
 }
 
-export function getLocation(){
-
+export async function getLocation(){
+  return new Promise((resolve, reject)=>{
+    if(!("geolocation" in navigator)){
+      return reject(new Error("Geolocation is not supported"))
+    }
+    navigator.geolocation.getCurrentPosition((position)=>{
+      const {latitude, longitude} = position.coords;
+      resolve({lat: latitude, lon: longitude})
+    }, (error)=>{
+      reject(error)
+    })
+  })
 }
