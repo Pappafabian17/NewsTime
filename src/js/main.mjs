@@ -86,8 +86,15 @@ function updateActiveNavItem(activeLink) {
 async function setweather(){
   const weatherData = new WeatherData();
   weatherInformation =  await weatherData.getWeather();
+  const weather = weatherInformation.current;
+  const location = weatherInformation.location;
   console.log("weatherInformation", weatherInformation);
-
+  const weatherMenu = document.querySelector('#weather-menu');
+  weatherMenu.innerHTML = `
+    <img src="${weather.condition.icon}" alt="${weather.condition.text}">
+    <p>${weather.feelslike_c}°C</p>
+    <p>${location.name}</p>
+  `
 }
 
 initPage();

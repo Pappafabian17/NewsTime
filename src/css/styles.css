@@ -344,6 +344,8 @@ main {
       box-shadow: none;
       padding: 0;
       flex-direction: row;
+      align-items: center;
+      justify-content: center;
 
       & li {
         margin: 0;
