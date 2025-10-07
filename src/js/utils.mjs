@@ -37,7 +37,7 @@ export async function loadTemplate(path) {
 
 export async function loadHeaderFooter() {
   const isDev = import.meta.env.DEV;
-  const basePath = isDev ? "src/public/" : "";
+  const basePath = isDev ? "" : "";
   
   const headerTemplate = await loadTemplate(`${basePath}partials/header.html`);
   const footerTemplate = await loadTemplate(`${basePath}partials/footer.html`);

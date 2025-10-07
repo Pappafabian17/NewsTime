@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NewsTime | Article</title>
+    <meta
+      name="description"
+      content="Read the full article from NewsTime."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../src/css/styles.css" />
+    <link rel="stylesheet" href="../src/css/article.css" />
+    <script type="module" src="../src/js/article.mjs"></script>
+  </head>
+  <body>
+    <div id="header"></div>
+    
+    <main class="article-main">
+      <nav class="breadcrumb">
+        <a href="../index.html">← Back to News</a>
+      </nav>
+      
+      <article id="article-content" class="article-container">
+        <!-- El contenido del artículo se cargará aquí -->
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>Loading article...</p>
+        </div>
+      </article>
+    </main>
+
+    <div id="footer"></div>
+  </body>
+</html>

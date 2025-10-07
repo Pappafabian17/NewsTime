@@ -2,6 +2,7 @@ import NewsData from "./NewsData.mjs";
 import NewsList from "./newsList.mjs";
 import { loadHeaderFooter } from "./utils.mjs";
 import WeatherData from "./weather.mjs";
+import Search from "./search.mjs";
 
 const countryMap = {
     "Argentina": "ar",
@@ -15,11 +16,13 @@ const countryMap = {
 
 let currentNewsList = null;
 let weatherInformation = null;
+let searchInstance = null;
 
 
 async function initPage() {
   await loadHeaderFooter();
   setupNavigation();
+  setupSearch();
   setweather();
   loadNewsForCountry("Argentina");
 }
@@ -75,7 +78,6 @@ async function loadNewsForCountry(countryName){
 
   currentNewsList = new NewsList(countryName, newsData, newsListElement);
   await currentNewsList.init();
-  console.log(`Loading news for ${countryName}-${countryCode}`   )
 }
 
 function updateActiveNavItem(activeLink) {
@@ -83,12 +85,16 @@ function updateActiveNavItem(activeLink) {
   navLinks.forEach(link => link.classList.remove('active'));
   activeLink.classList.add('active');
 }
+
+function setupSearch() {
+  searchInstance = new Search();
+  searchInstance.init();
+}
 async function setweather(){
   const weatherData = new WeatherData();
   weatherInformation =  await weatherData.getWeather();
   const weather = weatherInformation.current;
   const location = weatherInformation.location;
-  console.log("weatherInformation", weatherInformation);
   const weatherMenu = document.querySelector('#weather-menu');
   weatherMenu.innerHTML = `
     <img src="${weather.condition.icon}" alt="${weather.condition.text}">

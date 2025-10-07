@@ -9,8 +9,7 @@ export default class NewsData {
     return response;
   }
   async getNewsById(id){
-    const response = await fetchingFunction("news",baseUrl, id);
-    console.log("response by id", response);
+    const response = await fetchingFunction("news",baseUrl,null, id);
     return response;
   }
 }

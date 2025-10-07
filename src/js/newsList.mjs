@@ -14,7 +14,7 @@ function newsCardTemplate(newNotice) {
   const imageLink = newNotice.image_url ? newNotice.image_url : 'src/public/images/default-image.webp';
   return `
     <section class="news-card">
-        <a class="news-a" href="../news/?article_id=${newNotice.article_id}">
+        <a class="news-a" href="news/?article_id=${newNotice.article_id}">
           <img
             class="news-image"
             src="${imageLink}"
