@@ -1,5 +1,5 @@
 import NewsData from "./NewsData.mjs";
-import { renderListWithTemplate } from "./utils.mjs";
+import { renderListWithTemplate, addToFavorites, removeFromFavorites, isFavorite } from "./utils.mjs";
 
 export default class Search {
   constructor() {
@@ -42,58 +42,59 @@ export default class Search {
     const query = customQuery || this.searchInput.value.trim();
     
     if (!query || query.length < 2) {
-      this.showMessage('Por favor ingresa al menos 2 caracteres para buscar');
+      this.showMessage('Please enter at least 2 characters to search');
       return;
     }
 
     try {
       this.showLoading();
+      
       const data = await this.newsData.getNews(query);
-      searchResults = data.results
-      if (searchResults && searchResults.length > 0) {
-        this.displaySearchResults(searchResults, query);
+      
+      if (data.status === 'success' && data.results && data.results.length > 0) {
+        this.displaySearchResults(data.results, query);
       } else {
-        this.showMessage(`No se encontraron resultados para "${query}"`);
+        this.showMessage('No news found for your search');
       }
     } catch (error) {
-      console.error('Error en la búsqueda:', error);
-      this.showMessage('Error al realizar la búsqueda. Por favor intenta nuevamente.');
+      console.error('Error searching news:', error);
+      this.showMessage('Error searching news. Please try again.');
     }
   }
 
   displaySearchResults(articles, query) {
     if (!this.newsContainer) return;
-
-    this.newsContainer.innerHTML = '';
-
-    const resultsHeader = document.createElement('div');
-    resultsHeader.className = 'search-results-header';
-    resultsHeader.innerHTML = `
-      <h2>Resultados de búsqueda para: "${query}"</h2>
-      <p>Se encontraron ${articles.length} artículos</p>
+    
+    this.newsContainer.innerHTML = `
+      <div class="search-results-header">
+        <h2>Search Results for "${query}"</h2>
+        <p>Found ${articles.length} articles</p>
+      </div>
     `;
-    this.newsContainer.appendChild(resultsHeader);
 
     renderListWithTemplate(
-      this.newsCardTemplate,
+      this.newsCardTemplate.bind(this),
       this.newsContainer,
       articles,
       'beforeend',
       false
     );
+    
+    this.setupFavoriteButtons();
   }
 
   newsCardTemplate(article) {
-    const imageUrl = article.urlToImage || 'images/default-image.webp';
-    const publishedDate = new Date(article.publishedAt).toLocaleDateString('es-ES', {
+    const imageUrl = article.image_url || 'images/default-image.webp';
+    const publishedDate = new Date(article.pubDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+    const favoriteIcon = isFavorite(article.article_id) ? 'images/icons/favourite-filled.svg' : 'images/icons/favourite-empty.svg';
 
     return `
       <section class="news-card">
-        <a class="news-a" href="news/index.html?article_id=${encodeURIComponent(article.url)}">
+        <a class="news-a" href="news/index.html?article_id=${encodeURIComponent(article.article_id)}">
           <img
             class="news-image"
             src="${imageUrl}"
@@ -102,13 +103,16 @@ export default class Search {
           />
           <div class="news-text">
             <h2 class="news-title">${article.title}</h2>
-            <p class="news-description">${article.description || 'Sin descripción disponible'}</p>
+            <p class="news-description">${article.description || 'No description available'}</p>
             <div class="news-meta">
-              <span class="news-source">${article.source?.name || 'Fuente desconocida'}</span>
+              <span class="news-source">${article.source_name || 'Unknown source'}</span>
               <span class="news-date">${publishedDate}</span>
             </div>
           </div>
         </a>
+        <button class="favorite-btn" onclick="toggleFavorite('${article.article_id}', this)" data-article='${JSON.stringify(article).replace(/'/g, "&apos;")}'>
+          <img src="${favoriteIcon}" alt="Add to favorites" />
+        </button>
       </section>
     `;
   }
@@ -119,7 +123,7 @@ export default class Search {
     this.newsContainer.innerHTML = `
       <div class="loading-container" style="text-align: center; padding: 2rem;">
         <div class="spinner"></div>
-        <p>Buscando noticias...</p>
+        <p>Searching news...</p>
       </div>
     `;
   }
@@ -138,5 +142,23 @@ export default class Search {
     if (this.searchInput) {
       this.searchInput.value = '';
     }
+    if (this.newsContainer) {
+      this.newsContainer.innerHTML = '';
+    }
+  }
+  
+  setupFavoriteButtons() {
+    window.toggleFavorite = (articleId, buttonElement) => {
+      const articleData = JSON.parse(buttonElement.getAttribute('data-article').replace(/&apos;/g, "'"));
+      const img = buttonElement.querySelector('img');
+      
+      if (isFavorite(articleId)) {
+        removeFromFavorites(articleId);
+        img.src = 'images/icons/favourite-empty.svg';
+      } else {
+        addToFavorites(articleData);
+        img.src = 'images/icons/favourite-filled.svg';
+      }
+    };
   }
 }

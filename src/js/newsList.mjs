@@ -1,4 +1,4 @@
-import { renderListWithTemplate } from "./utils.mjs";
+import { renderListWithTemplate, addToFavorites, removeFromFavorites, isFavorite } from "./utils.mjs";
 
 function truncateText(text, maxLength = 120){
   if(!text) return '';
@@ -10,8 +10,9 @@ function truncateText(text, maxLength = 120){
 function newsCardTemplate(newNotice) {
   const truncatedTitle = truncateText(newNotice.title, 80);
   const truncatedDescription = truncateText(newNotice.description, 120);
-
   const imageLink = newNotice.image_url ? newNotice.image_url : 'src/public/images/default-image.webp';
+  const favoriteIcon = isFavorite(newNotice.article_id) ? 'images/icons/favourite-filled.svg' : 'images/icons/favourite-empty.svg';
+  
   return `
     <section class="news-card">
         <a class="news-a" href="news/?article_id=${newNotice.article_id}">
@@ -25,13 +26,16 @@ function newsCardTemplate(newNotice) {
               ${truncatedTitle}
             </h2>
             <p class="news-description">
-              ${truncatedDescription ? truncatedDescription : 'No description available  for more information click on the article'}
+              ${truncatedDescription ? truncatedDescription : 'No description available for more information click on the article'}
             </p>
             <div class="nexs-category-container">
             ${newNotice.category.map((item)=> `<span class="news-category">${item}</span>`).join('')}
             </div>
           </div>
         </a>
+        <button class="favorite-btn" onclick="toggleFavorite('${newNotice.article_id}', this)" data-article='${JSON.stringify(newNotice).replace(/'/g, "&apos;")}'>
+          <img src="${favoriteIcon}" alt="Add to favorites" />
+        </button>
       </section>
   `;
 }
@@ -47,7 +51,7 @@ function loadingTemplate() {
 function errorTemplate(error) {
   return `
     <div class="error-container">
-      <p>Error trying to load : ${error}</p>
+      <p>Error trying to load: ${error}</p>
     </div>
   `;
 }
@@ -58,6 +62,7 @@ export default class NewsList {
     this.data = data;
     this.listElement = listElement;
   }
+  
   async init() {
     try {
       this.listElement.innerHTML = loadingTemplate();
@@ -65,18 +70,34 @@ export default class NewsList {
       const allData = await this.data.getNews(this.query);
       let list = allData.results;
       
-      
       if (list && list.length > 0) {
         this.renderList(list);
+        this.setupFavoriteButtons();
       } else {
-        this.listElement.innerHTML = '<p>Notices not found for this country .</p>';
+        this.listElement.innerHTML = '<p>News not found for this country.</p>';
       }
     } catch (error) {
-      console.error("Error trying to load notices:", error);
+      console.error("Error trying to load news:", error);
       this.listElement.innerHTML = errorTemplate(error.message);
     }
   }
+  
   renderList(list) {
     renderListWithTemplate(newsCardTemplate, this.listElement, list, "afterbegin", true);
+  }
+  
+  setupFavoriteButtons() {
+    window.toggleFavorite = (articleId, buttonElement) => {
+      const articleData = JSON.parse(buttonElement.getAttribute('data-article').replace(/&apos;/g, "'"));
+      const img = buttonElement.querySelector('img');
+      
+      if (isFavorite(articleId)) {
+        removeFromFavorites(articleId);
+        img.src = 'images/icons/favourite-empty.svg';
+      } else {
+        addToFavorites(articleData);
+        img.src = 'images/icons/favourite-filled.svg';
+      }
+    };
   }
 }

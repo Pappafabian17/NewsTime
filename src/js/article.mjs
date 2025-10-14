@@ -117,7 +117,7 @@ class ArticlePage {
 
   createArticleTemplate(article) {
     const imageUrl = article.image_url || '../src/public/images/default-image.webp';
-    const publishDate = article.pubDate ? new Date(article.pubDate).toLocaleDateString('es-ES', {
+    const publishDate = article.pubDate ? new Date(article.pubDate).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',

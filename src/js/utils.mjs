@@ -83,3 +83,65 @@ export async function getLocation(){
     })
   })
 }
+
+export function saveToLocalStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error("Error saving to localStorage:", error);
+  }
+}
+
+export function getFromLocalStorage(key, defaultValue = null) {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    console.error("Error reading from localStorage:", error);
+    return defaultValue;
+  }
+}
+
+export function removeFromLocalStorage(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.error("Error removing from localStorage:", error);
+  }
+}
+
+export function clearLocalStorage() {
+  try {
+    localStorage.clear();
+  } catch (error) {
+    console.error("Error clearing localStorage:", error);
+  }
+}
+
+export function addToFavorites(article) {
+  const favorites = getFromLocalStorage('favorites', []);
+  const isAlreadyFavorite = favorites.some(fav => fav.article_id === article.article_id);
+  
+  if (!isAlreadyFavorite) {
+    favorites.push(article);
+    saveToLocalStorage('favorites', favorites);
+    return true;
+  }
+  return false;
+}
+
+export function removeFromFavorites(articleId) {
+  const favorites = getFromLocalStorage('favorites', []);
+  const updatedFavorites = favorites.filter(fav => fav.article_id !== articleId);
+  saveToLocalStorage('favorites', updatedFavorites);
+  return updatedFavorites.length !== favorites.length;
+}
+
+export function getFavorites() {
+  return getFromLocalStorage('favorites', []);
+}
+
+export function isFavorite(articleId) {
+  const favorites = getFavorites();
+  return favorites.some(fav => fav.article_id === articleId);
+}

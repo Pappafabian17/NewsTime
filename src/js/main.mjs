@@ -1,6 +1,6 @@
 import NewsData from "./NewsData.mjs";
 import NewsList from "./newsList.mjs";
-import { loadHeaderFooter } from "./utils.mjs";
+import { loadHeaderFooter, saveToLocalStorage, getFromLocalStorage } from "./utils.mjs";
 import WeatherData from "./weather.mjs";
 import Search from "./search.mjs";
 
@@ -24,7 +24,12 @@ async function initPage() {
   setupNavigation();
   setupSearch();
   setweather();
-  loadNewsForCountry("Argentina");
+  
+  const newsListElement = document.querySelector(".news-list");
+  if (newsListElement) {
+    const savedCountry = getFromLocalStorage('selectedCountry', 'Argentina');
+    loadNewsForCountry(savedCountry);
+  }
 }
 
 function setupNavigation(){
@@ -36,10 +41,19 @@ function setupNavigation(){
 
     navLinks.forEach(link =>{
       link.addEventListener('click', (e) =>{
-        e.preventDefault();
         const countryName = e.target.textContent.trim();
+        
+        if (countryName === 'Favorites') {
+          return;
+        }
+        
+        e.preventDefault();
         loadNewsForCountry(countryName);
         updateActiveNavItem(e.target);
+        
+        if (countryMap[countryName]) {
+          saveToLocalStorage('selectedCountry', countryName);
+        }
         
         if (navMenu.classList.contains('show')) {
           navMenu.classList.remove('show');
@@ -74,6 +88,12 @@ async function loadNewsForCountry(countryName){
   }
   const newsData = new NewsData();
   const newsListElement = document.querySelector(".news-list");
+  
+  if (!newsListElement) {
+    console.error("News list element not found");
+    return;
+  }
+  
   newsListElement.innerHTML = "";
 
   currentNewsList = new NewsList(countryName, newsData, newsListElement);
@@ -84,6 +104,15 @@ function updateActiveNavItem(activeLink) {
   const navLinks = document.querySelectorAll('header ul li a');
   navLinks.forEach(link => link.classList.remove('active'));
   activeLink.classList.add('active');
+  
+  const savedCountry = getFromLocalStorage('selectedCountry', 'Argentina');
+  if (!activeLink) {
+    navLinks.forEach(link => {
+      if (link.textContent.trim() === savedCountry) {
+        link.classList.add('active');
+      }
+    });
+  }
 }
 
 function setupSearch() {
