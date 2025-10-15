@@ -1,0 +1,11 @@
+# Netlify redirects file
+# Handle favorites page
+/favorites.html   /favorites.html   200
+
+# Handle news page with query parameters (article_id)
+/news/            /news/index.html  200
+/news             /news/index.html  200
+/news?*           /news/index.html  200
+
+# Fallback for any other routes
+/*                /index.html       200
